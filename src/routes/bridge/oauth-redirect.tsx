@@ -41,8 +41,35 @@ const auth = async (code: string) => {
   );
 
   const userData = await userResponse.json();
-  console.log("user_data", userData);
-  return userData;
+
+  const orgs = await (
+    await fetch("https://www.eventbriteapi.com/v3/users/me/organizations", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+        "Content-Type": "application/json",
+      },
+    })
+  ).json();
+
+  const firstOrgID = orgs.organizations[0].id;
+
+  const events = await (
+    await fetch(
+      "https://www.eventbriteapi.com/v3/organizations/" +
+        firstOrgID +
+        "/events",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
+  ).json();
+
+  return { user: userData, orgs, events };
 };
 
 export default function Home() {
