@@ -9,6 +9,9 @@ export default defineConfig({
       "/privacy-policy": {
         proxy: "https://smaller-items-983374.framer.app/privacy-policy",
       },
+      "/about": {
+        proxy: "https://smaller-items-983374.framer.app/about",
+      },
       "/": { proxy: "https://smaller-items-983374.framer.app/" },
     },
   },
