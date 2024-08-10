@@ -9,35 +9,59 @@ chrome.action.onClicked.addListener(async (tab) => {
   };
 
   try {
+    // Attach the debugger to the tab
     await chrome.debugger.attach(debugTarget, "1.2");
 
+    // Simulate pressing the Shift key down
     await chrome.debugger.sendCommand(debugTarget, "Input.dispatchKeyEvent", {
       type: "keyDown",
-      key: "a",
-      code: "KeyA",
-      keyCode: 65,
-      windowsVirtualKeyCode: 65,
-      isShift: false,
+      key: "Shift",
+      code: "ShiftLeft",
+      keyCode: 16,
+      windowsVirtualKeyCode: 16,
+      isShift: true,
       isControl: false,
       isAlt: false,
-      text: "a",
+    });
+
+    // Simulate typing the uppercase letter 'R'
+    await chrome.debugger.sendCommand(debugTarget, "Input.dispatchKeyEvent", {
+      type: "keyDown",
+      key: "R",
+      code: "KeyR",
+      keyCode: 82,
+      windowsVirtualKeyCode: 82,
+      isShift: true,
+      isControl: false,
+      isAlt: false,
+      text: "R",
     });
 
     await chrome.debugger.sendCommand(debugTarget, "Input.dispatchKeyEvent", {
       type: "keyUp",
-      key: "a",
-      code: "KeyA",
-      keyCode: 65,
-      windowsVirtualKeyCode: 65,
+      key: "R",
+      code: "KeyR",
+      keyCode: 82,
+      windowsVirtualKeyCode: 82,
+      isShift: true,
+      isControl: false,
+      isAlt: false,
+      text: "R",
+    });
+
+    // Simulate releasing the Shift key
+    await chrome.debugger.sendCommand(debugTarget, "Input.dispatchKeyEvent", {
+      type: "keyUp",
+      key: "Shift",
+      code: "ShiftLeft",
+      keyCode: 16,
+      windowsVirtualKeyCode: 16,
       isShift: false,
       isControl: false,
       isAlt: false,
-      text: "a",
     });
-
     await chrome.debugger.detach(debugTarget);
-
-    console.log("Typed 'a' into the active element.");
+    console.log("Typed 'R' into the active element.");
   } catch (error) {
     console.error("Failed to attach debugger or send key event:", error);
   }

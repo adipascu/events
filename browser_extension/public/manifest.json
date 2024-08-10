@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Virtual A key",
+  "name": "R virtual key",
   "version": "1.0.0",
   "permissions": ["debugger"],
   "background": {
