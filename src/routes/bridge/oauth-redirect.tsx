@@ -1,6 +1,6 @@
 import { Title } from "@solidjs/meta";
 import { createAsync, useSearchParams } from "@solidjs/router";
-import { API_KEY, CLIENT_SECRET, REDIRECT_URL } from "~/config";
+import { EVENTBRITE_API_KEY, EVENTBRITE_CLIENT_SECRET, EVENTBRITE_REDIRECT_URL } from "~/config";
 
 const auth = async (code: string) => {
   "use server";
@@ -9,10 +9,10 @@ const auth = async (code: string) => {
   const tokenUrl = "https://www.eventbrite.com/oauth/token";
   const params = new URLSearchParams();
   params.append("grant_type", "authorization_code");
-  params.append("client_id", API_KEY);
-  params.append("client_secret", CLIENT_SECRET);
+  params.append("client_id", EVENTBRITE_API_KEY);
+  params.append("client_secret", EVENTBRITE_CLIENT_SECRET);
   params.append("code", code);
-  params.append("redirect_uri", REDIRECT_URL);
+  params.append("redirect_uri", EVENTBRITE_REDIRECT_URL);
 
   const response = await fetch(tokenUrl, {
     method: "POST",

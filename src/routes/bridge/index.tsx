@@ -1,13 +1,13 @@
 import { Title } from "@solidjs/meta";
 import Counter from "~/components/Counter";
-import { API_KEY, REDIRECT_URL } from "~/config";
+import { EVENTBRITE_API_KEY, EVENTBRITE_REDIRECT_URL } from "~/config";
 
 export default function Home() {
   const AUTH_URL =
     " https://www.eventbrite.com/oauth/authorize?response_type=code&client_id=" +
-    API_KEY +
+    EVENTBRITE_API_KEY +
     "&redirect_uri=" +
-    REDIRECT_URL;
+    EVENTBRITE_REDIRECT_URL;
   return (
     <main>
       <Title>Login with Eventbrite</Title>
