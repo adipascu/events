@@ -1,6 +1,10 @@
 import { Title } from "@solidjs/meta";
 import { createAsync, useSearchParams } from "@solidjs/router";
-import { EVENTBRITE_API_KEY, EVENTBRITE_CLIENT_SECRET, EVENTBRITE_REDIRECT_URL } from "~/config";
+import {
+  EVENTBRITE_API_KEY,
+  EVENTBRITE_CLIENT_SECRET,
+  EVENTBRITE_REDIRECT_URL,
+} from "~/config";
 
 const auth = async (code: string) => {
   "use server";
@@ -54,13 +58,83 @@ const auth = async (code: string) => {
 
   const firstOrgID = orgs.organizations[0].id;
 
-  const events = await (
+  // const events = await (
+  //   await fetch(
+  //     "https://www.eventbriteapi.com/v3/organizations/" +
+  //       firstOrgID +
+  //       "/events",
+  //     {
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: `Bearer ${access_token}`,
+  //         "Content-Type": "application/json",
+  //       },
+  //     }
+  //   )
+  // ).json();
+
+  const newEvent = await (
     await fetch(
       "https://www.eventbriteapi.com/v3/organizations/" +
         firstOrgID +
-        "/events",
+        "/events/",
       {
-        method: "GET",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event: {
+            name: {
+              html: "Sample Event",
+            },
+            start: {
+              utc: "2024-08-15T18:00:00Z",
+              timezone: "UTC",
+            },
+            end: {
+              utc: "2024-08-15T20:00:00Z",
+              timezone: "UTC",
+            },
+            venue_id: "206000609",
+            category_id: "102",
+            currency: "USD",
+            // capacity:25
+            // description: {
+            //   html: "This is a sample event description.",
+            // },
+          },
+        }),
+      }
+    )
+  ).json();
+
+  const ticketClass = await (
+    await fetch(
+      `https://www.eventbriteapi.com/v3/events/${newEvent.id}/ticket_classes/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ticket_class: {
+            name: "Free Ticket",
+            quantity_total: 25,
+            free: true,
+          },
+        }),
+      }
+    )
+  ).json();
+
+  const published = await (
+    await fetch(
+      "https://www.eventbriteapi.com/v3/events/" + newEvent.id + "/publish/",
+      {
+        method: "POST",
         headers: {
           Authorization: `Bearer ${access_token}`,
           "Content-Type": "application/json",
@@ -69,7 +143,15 @@ const auth = async (code: string) => {
     )
   ).json();
 
-  return { user: userData, orgs, events };
+  return {
+    access_token,
+    user: userData,
+    orgs,
+    // events,
+    newEvent,
+    ticketClass,
+    published,
+  };
 };
 
 export default function Home() {

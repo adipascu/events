@@ -1,5 +1,4 @@
 import { Title } from "@solidjs/meta";
-import Counter from "~/components/Counter";
 import { EVENTBRITE_API_KEY, EVENTBRITE_REDIRECT_URL } from "~/config";
 
 export default function Home() {
