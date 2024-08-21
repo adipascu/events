@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "R virtual key",
+  "name": "Matrics event manager",
   "version": "1.0.0",
   "permissions": ["debugger"],
   "background": {
