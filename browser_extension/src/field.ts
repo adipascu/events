@@ -13,15 +13,31 @@ export const setReactField = (
   element.dispatchEvent(new Event("input", { bubbles: true }));
 };
 
-export const getInputField = (querySelector: string): HTMLInputElement => {
+export const getInputField = (
+  querySelector: string,
+  parentFilter?: (element: HTMLElement) => boolean
+): HTMLInputElement => {
   const elements = [...document.querySelectorAll(querySelector)];
-  if (elements.length === 0) {
+
+  const filteredElements = parentFilter
+    ? elements.filter((element) => {
+        let parent = element.parentElement;
+        while (parent) {
+          if (!parentFilter(parent)) {
+            return false;
+          }
+          parent = parent.parentElement;
+        }
+        return true;
+      })
+    : elements;
+  if (filteredElements.length === 0) {
     throw new Error("Missing field " + querySelector);
   }
-  if (elements.length > 1) {
+  if (filteredElements.length > 1) {
     throw new Error("Too many fields " + querySelector);
   }
-  const element = elements[0];
+  const element = filteredElements[0];
   if (!(element instanceof HTMLInputElement)) {
     throw new Error("Invalid element type " + element.tagName);
   }
