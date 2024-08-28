@@ -43,3 +43,18 @@ export const getInputField = (
   }
   return element;
 };
+
+export const getDiv = (selector: string) => {
+  const elements = [...document.querySelectorAll(selector)];
+  if (elements.length === 0) {
+    throw new Error("Missing div " + selector);
+  }
+  if (elements.length > 1) {
+    throw new Error("Too many divs " + selector);
+  }
+  const element = elements[0];
+  if (!(element instanceof HTMLDivElement)) {
+    throw new Error("Invalid element type " + element.tagName);
+  }
+  return element;
+};
