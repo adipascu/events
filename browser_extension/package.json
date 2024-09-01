@@ -39,6 +39,7 @@
     "vite-plugin-solid": "^2.10.2"
   },
   "dependencies": {
+    "@apollo/client": "^3.11.5",
     "@fontsource/sen": "^5.0.20",
     "solid-icons": "^1.1.0",
     "solid-js": "^1.8.17",

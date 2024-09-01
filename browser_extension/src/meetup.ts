@@ -1,30 +1,80 @@
-import { getDiv, getInputField, setReactField } from "./field";
-import { PLACEHOLDER_DESCRIPTION } from "./placeholder-description";
+import { Temporal } from "temporal-polyfill";
+import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
+import { parseCreateEventResponse } from "./types";
 
-type Event = {
+const CREATE_EVENT_MUTATION = gql`
+  mutation createEvent($input: CreateEventInput!) {
+    createEvent(input: $input) {
+      event {
+        id
+        eventUrl
+        title
+        group {
+          id
+        }
+      }
+      errors {
+        code
+        message
+        field
+      }
+    }
+  }
+`;
+
+export const fillMeetup = async ({
+  title,
+  startDate,
+  endDate,
+  description,
+}: {
   title: string;
-};
+  startDate: Temporal.PlainDateTime; // Temporal PlainDateTime for start date
+  endDate: Temporal.PlainDateTime; // Temporal PlainDateTime for end date
+  description: string;
+}) => {
+  let client = new ApolloClient({
+    ssrMode: false,
+    name: "nextjs-web",
+    cache: new InMemoryCache(),
+    uri: "https://www.meetup.com/gql2",
+  });
 
-export const fillMeetup = ({ title }: Event) => {
-  const titleField = getInputField("#event-schedule-main input[name=title]");
-  setReactField(titleField, title);
+  let data = {
+    input: {
+      description,
+      duration: startDate.until(endDate).toString(),
+      eventHosts: [194460526],
+      featuredPhotoId: null,
+      fundraising: {
+        enabled: false,
+      },
+      groupUrlname: "hackerspace-brussels",
+      publishStatus: "DRAFT",
+      question: "",
+      rsvpSettings: {
+        guestLimit: 0,
+        rsvpOpenDuration: "PT0S",
+        rsvpCloseDuration: "PT0S",
+        rsvpLimit: 0,
+      },
+      startDateTime: startDate.toString(),
+      title,
+      topics: [],
+      isCopy: false,
+    },
+  };
 
-  const startDateField = getInputField(
-    "#event-schedule-main .DayPickerInput input",
-    (parent) => {
-      return !parent.classList.contains("hidden");
-    }
-  );
-  setReactField(startDateField, "Thu, Sep 20, 2025");
+  const result = await client.mutate({
+    mutation: CREATE_EVENT_MUTATION,
+    variables: data,
+  });
 
-  const startTimeField = getInputField(
-    "#event-schedule-main input[type=time]",
-    (parent) => {
-      return !parent.classList.contains("hidden");
-    }
-  );
-  setReactField(startTimeField, "04:20");
-
-  const div = getDiv(".toastui-editor-ww-container .toastui-editor-contents");
-  div.innerHTML = PLACEHOLDER_DESCRIPTION;
+  const res = parseCreateEventResponse(result);
+  console.log({ res });
+  if (res.data.createEvent.errors.length > 0) {
+    console.log(res.data.createEvent.errors);
+    throw new Error("Failed to create event");
+  }
+  return res.data.createEvent.event;
 };
