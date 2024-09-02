@@ -1,6 +1,32 @@
 import { Temporal } from "temporal-polyfill";
 import { ApolloClient, gql, InMemoryCache } from "@apollo/client";
-import { parseCreateEventResponse } from "./types";
+import { parseCreateEventResponse, parseVenue } from "./types";
+
+const GET_VENUES_QUERY = gql`
+  query suggestVenues(
+    $query: String!
+    $lat: Float!
+    $lon: Float!
+    $first: Int
+  ) {
+    suggestVenues(query: $query, lat: $lat, lon: $lon, first: $first) {
+      edges {
+        node {
+          id
+          name
+          address
+          city
+          country
+          postalCode
+          state
+          venueType
+          lat
+          lon
+        }
+      }
+    }
+  }
+`;
 
 const CREATE_EVENT_MUTATION = gql`
   mutation createEvent($input: CreateEventInput!) {
@@ -64,6 +90,18 @@ export const fillMeetup = async ({
       isCopy: false,
     },
   };
+
+  const venuesData = await client.query({
+    query: GET_VENUES_QUERY,
+    variables: {
+      query: "hsbxl",
+      lat: 50.83,
+      lon: 4.33,
+      first: 5,
+    },
+  });
+
+  const venues = parseVenue(venuesData.data);
 
   const result = await client.mutate({
     mutation: CREATE_EVENT_MUTATION,
