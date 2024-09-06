@@ -1,5 +1,4 @@
 import { defineConfig } from "@solidjs/start/config";
-import topLevelAwait from "vite-plugin-top-level-await";
 
 export default defineConfig({
   server: {
@@ -15,8 +14,5 @@ export default defineConfig({
       },
       "/": { proxy: "https://smaller-items-983374.framer.app/" },
     },
-  },
-  vite: {
-    plugins: [topLevelAwait()],
   },
 });

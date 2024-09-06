@@ -18,8 +18,5 @@
     "nanoid": "^5.0.7",
     "solid-js": "^1.8.22",
     "vinxi": "^0.4.2"
-  },
-  "devDependencies": {
-    "vite-plugin-top-level-await": "^1.4.4"
   }
 }
