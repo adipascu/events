@@ -13,8 +13,8 @@ export default function Home() {
   });
   return (
     <main>
-      <Title>Create an event</Title>
-      <h1>Create an event</h1>
+      <Title>Event information</Title>
+      <h1>Event information</h1>
       Name: {event()?.name}
     </main>
   );
