@@ -6,10 +6,12 @@ import { Suspense } from "solid-js";
 export default function App() {
   return (
     <Router
-      root={props => (
+      root={(props) => (
         <MetaProvider>
           <Title>Beta App</Title>
           <a href="/">Index</a>
+          <br />
+          <a href="/event">Create event</a>
           <Suspense>{props.children}</Suspense>
         </MetaProvider>
       )}
