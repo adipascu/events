@@ -14,7 +14,7 @@ const handleSubmit = action<[FormData]>(async (formData) => {
       formData.get("end-datetime") as string
     ).toZonedDateTime("Europe/Brussels"),
     location: formData.get("location") as string,
-    description: "Placeholder description",
+    description: formData.get("description") as string,
   });
   console.log("Event Created with ID " + eventID);
   throw redirect("/event/" + eventID);
@@ -56,6 +56,12 @@ function EventForm() {
           required
           value="test"
         />
+      </div>
+      <div>
+        <label for="description">Event Description:</label>
+        <textarea id="description" name="description" required>
+          Enter event description here
+        </textarea>
       </div>
       <button type="submit">Create Event</button>
     </form>
