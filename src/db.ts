@@ -1,3 +1,5 @@
+"use server"
+
 import nano from "nano";
 import { customAlphabet } from "nanoid";
 import { COUCHDB_URL } from "./config";
