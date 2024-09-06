@@ -5,7 +5,7 @@ import { COUCHDB_URL } from "./config";
 const nolookalikes = "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz";
 const createID = customAlphabet(nolookalikes, 7);
 
-const dbConnector = nano("https://admin:rhyGG5GAKiqVZ7@db.adipascu.ro");
+const dbConnector = nano(COUCHDB_URL);
 
 type Event = {
   name: string;
