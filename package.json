@@ -14,9 +14,11 @@
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.14.3",
     "@solidjs/start": "^1.0.6",
+    "calendar-link": "^2.7.0",
     "nano": "^10.1.4",
     "nanoid": "^5.0.7",
     "solid-js": "^1.8.22",
+    "temporal-polyfill": "^0.2.5",
     "vinxi": "^0.4.2"
   }
 }

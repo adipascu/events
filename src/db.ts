@@ -1,17 +1,15 @@
-"use server"
+"use server";
 
 import nano from "nano";
 import { customAlphabet } from "nanoid";
 import { COUCHDB_URL } from "./config";
+import { MatricsEvent } from "./types";
+import { Temporal } from "temporal-polyfill";
 
 const nolookalikes = "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz";
 const createID = customAlphabet(nolookalikes, 7);
 
 const dbConnector = nano(COUCHDB_URL);
-
-type Event = {
-  name: string;
-};
 
 const createEventsDB = (async () => {
   try {
@@ -21,20 +19,28 @@ const createEventsDB = (async () => {
       throw e;
     }
   }
-  return dbConnector.db.use<Event>("events");
+  return dbConnector.db.use<{
+    name: string;
+    description: string;
+    location: string;
+    start: string;
+    end: string;
+  }>("events");
 })();
 
-export const createEvent = async (event: Event) => {
+export const createEvent = async (event: MatricsEvent) => {
   const ID = createID();
   const eventsDB = await createEventsDB;
-  await eventsDB.insert(event, ID);
+
+  await eventsDB.insert(
+    { ...event, start: event.start.toString(), end: event.end.toString() },
+    ID
+  );
+
   return ID;
 };
 
 export const loadEvent = async (ID: string) => {
   const eventsDB = await createEventsDB;
-  const doc = await eventsDB.get(ID);
-  return {
-    name: doc.name,
-  } satisfies Event;
+  return await eventsDB.get(ID);
 };

@@ -1,17 +1,22 @@
 import { action, redirect } from "@solidjs/router";
+import { Temporal } from "temporal-polyfill";
 import { createEvent } from "~/db";
 
 const handleSubmit = action<[FormData]>(async (formData) => {
   "use server";
-  const eventData = {
-    name: formData.get("name"),
-    startDateTime: formData.get("start-datetime"),
-    endDateTime: formData.get("end-datetime"),
-    location: formData.get("location"),
-  };
 
-  const eventID = await createEvent({ name: eventData.name as string });
-  console.log("Event Created:", eventData);
+  const eventID = await createEvent({
+    name: formData.get("name") as string,
+    start: Temporal.PlainDateTime.from(
+      formData.get("start-datetime") as string
+    ).toZonedDateTime("Europe/Brussels"),
+    end: Temporal.PlainDateTime.from(
+      formData.get("end-datetime") as string
+    ).toZonedDateTime("Europe/Brussels"),
+    location: formData.get("location") as string,
+    description: "Placeholder description",
+  });
+  console.log("Event Created with ID " + eventID);
   throw redirect("/event/" + eventID);
 });
 
