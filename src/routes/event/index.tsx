@@ -1,4 +1,5 @@
-import { action } from "@solidjs/router";
+import { action, redirect } from "@solidjs/router";
+import { createEvent } from "~/db";
 
 const handleSubmit = action<[FormData]>(async (formData) => {
   "use server";
@@ -9,7 +10,9 @@ const handleSubmit = action<[FormData]>(async (formData) => {
     location: formData.get("location"),
   };
 
+  const eventID = await createEvent({ name: eventData.name as string });
   console.log("Event Created:", eventData);
+  throw redirect("/event/" + eventID);
 });
 
 function EventForm() {
@@ -17,7 +20,7 @@ function EventForm() {
     <form action={handleSubmit} method="post">
       <div>
         <label for="name">Event Name:</label>
-        <input type="text" id="name" name="name" required />
+        <input type="text" id="name" name="name" required value="test" />
       </div>
       <div>
         <label for="start-datetime">Event Start Date and Time:</label>
@@ -26,6 +29,7 @@ function EventForm() {
           id="start-datetime"
           name="start-datetime"
           required
+          value="2024-09-06T09:10"
         />
       </div>
       <div>
@@ -35,11 +39,18 @@ function EventForm() {
           id="end-datetime"
           name="end-datetime"
           required
+          value="2024-09-06T09:10"
         />
       </div>
       <div>
         <label for="location">Event Location:</label>
-        <input type="text" id="location" name="location" required />
+        <input
+          type="text"
+          id="location"
+          name="location"
+          required
+          value="test"
+        />
       </div>
       <button type="submit">Create Event</button>
     </form>

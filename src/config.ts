@@ -24,3 +24,5 @@ export const FACEBOOK_REDIRECT_URL = IS_PRODUCTION
 export const FACEBOOK_CLIENT_SECRET = IS_PRODUCTION
   ? "1c1a70d900243a0354541285133ab8b5"
   : "d8f08b0288123d66d2f8d94c7b5fc4ff";
+
+export const COUCHDB_URL = "https://admin:rhyGG5GAKiqVZ7@db.adipascu.ro";
