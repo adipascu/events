@@ -10,10 +10,7 @@ export default function App() {
     <Router
       root={(props) => (
         <MetaProvider>
-          <Title>Beta App</Title>
-          <a href="/">Index</a>
-          <br />
-          <a href="/event">Create event</a>
+          <Title>Matr.ics instant events</Title>
           <Suspense>{props.children}</Suspense>
         </MetaProvider>
       )}

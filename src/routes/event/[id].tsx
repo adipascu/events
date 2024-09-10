@@ -50,14 +50,10 @@ const Event = ({ event }: { event: MatricsEvent }) => {
     return url.toString();
   };
   return (
-    <div class="max-w-xl rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3">
+    <div class="max-w-xl rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 sm:my-6">
+      <Title>{event.name}</Title>
       <h1 class="text-lg font-semibold">{event.name}</h1>
       <p class="whitespace-pre-line">{event.description}</p>
-      <IconLink
-        icon={FaSolidLocationDot}
-        url={mapsURL(event.location)}
-        label={event.location}
-      />
       <div class="flex items-center space-x-3">
         <FaRegularClock />
         <span>
@@ -76,6 +72,11 @@ const Event = ({ event }: { event: MatricsEvent }) => {
           })}
         </span>
       </div>
+      <IconLink
+        icon={FaSolidLocationDot}
+        url={mapsURL(event.location)}
+        label={event.location}
+      />
       <IconLink
         icon={FaBrandsGoogle}
         url={google(icsFields)}
@@ -111,7 +112,7 @@ const EventPage = () => {
   });
   return (
     <main class="flex justify-center">
-      <Title>Event information</Title>
+      <Title>Matr.ics Event</Title>
       <Show when={event()} fallback="Loading event">
         {(event) => <Event event={parseEvent(event())} />}
       </Show>
