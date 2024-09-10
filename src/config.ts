@@ -1,4 +1,5 @@
-const IS_PRODUCTION = process.env.NODE_ENV === "production";
+export const IS_PRODUCTION = import.meta.env.PROD;
+
 export const EVENTBRITE_API_KEY = IS_PRODUCTION
   ? "GRVWTE7Y7X2LHU45QQ"
   : "5PKBXOOMVOZ3F2B6QG";
