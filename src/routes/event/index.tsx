@@ -1,3 +1,4 @@
+import { Title } from "@solidjs/meta";
 import { action, redirect } from "@solidjs/router";
 import { Temporal } from "temporal-polyfill";
 import { IS_PRODUCTION } from "~/config";
@@ -39,54 +40,92 @@ Knowledge Exchange: Encountered a tech puzzle? Someone in the room might have ju
 
 function EventForm() {
   return (
-    <form action={handleSubmit} method="post">
-      <div>
-        <label for="name">Event Name:</label>
+    <form
+      action={handleSubmit}
+      method="post"
+      class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg space-y-4"
+    >
+      <h1 class="text-2xl font-bold mb-6">Create an Event</h1>
+      <div class="space-y-2">
+        <label for="name" class="block text-gray-700 font-medium">
+          Event Name:
+        </label>
         <input
           type="text"
           id="name"
           name="name"
           required
+          class="w-full border-gray-300 rounded-md shadow-sm"
           value={IS_PRODUCTION ? "" : "TechTuesday"}
         />
       </div>
-      <div>
-        <label for="start-datetime">Event Start Date and Time:</label>
+      <div class="space-y-2">
+        <label
+          for="start-datetime"
+          class="block text-gray-700 font-medium"
+        >
+          Event Start Date and Time:
+        </label>
         <input
           type="datetime-local"
           id="start-datetime"
           name="start-datetime"
           required
+          class="w-full border-gray-300 rounded-md shadow-sm"
           value={IS_PRODUCTION ? "" : "2024-09-10T19:00"}
         />
       </div>
-      <div>
-        <label for="end-datetime">Event End Date and Time:</label>
+      <div class="space-y-2">
+        <label
+          for="end-datetime"
+          class="block text-gray-700 font-medium"
+        >
+          Event End Date and Time:
+        </label>
         <input
           type="datetime-local"
           id="end-datetime"
           name="end-datetime"
           required
+          class="w-full border-gray-300 rounded-md shadow-sm"
           value={IS_PRODUCTION ? "" : "2024-09-10T22:00"}
         />
       </div>
-      <div>
-        <label for="location">Event Location:</label>
+      <div class="space-y-2">
+        <label for="location" class="block text-gray-700 font-medium">
+          Event Location:
+        </label>
         <input
           type="text"
           id="location"
           name="location"
           required
+          class="w-full border-gray-300 rounded-md shadow-sm"
           value={IS_PRODUCTION ? "" : "HSBXL"}
         />
       </div>
-      <div>
-        <label for="description">Event Description:</label>
-        <textarea id="description" name="description" required>
+      <div class="space-y-2">
+        <label
+          for="description"
+          class="block text-gray-700 font-medium"
+        >
+          Event Description:
+        </label>
+        <textarea
+          id="description"
+          name="description"
+          required
+          class="w-full border-gray-300 rounded-md shadow-sm"
+        >
           {IS_PRODUCTION ? "" : PLACEHOLDER_DESCRIPTION}
         </textarea>
       </div>
-      <button type="submit">Create Event</button>
+      <button
+        type="submit"
+        class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+      >
+        Create Event
+      </button>
     </form>
   );
 }
