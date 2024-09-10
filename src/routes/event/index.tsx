@@ -23,20 +23,9 @@ const handleSubmit = action<[FormData]>(async (formData) => {
 function EventForm() {
   return (
     <form action={handleSubmit} method="post">
-      <div class="nui-input-wrapper nui-input-default nui-input-md nui-input-rounded">
-        <label class="nui-input-label" for="name">
-          Event Name:
-        </label>
-        <div class="nui-input-outer">
-          <input
-            id="name"
-            name="name"
-            class="nui-input"
-            type="text"
-            required
-            placeholder=""
-          />
-        </div>
+      <div>
+        <label for="name">Event Name:</label>
+        <input type="text" id="name" name="name" required value="test" />
       </div>
       <div>
         <label for="start-datetime">Event Start Date and Time:</label>
