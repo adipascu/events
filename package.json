@@ -20,6 +20,7 @@
     "nano": "^10.1.4",
     "nanoid": "^5.0.7",
     "postcss": "^8.4.45",
+    "solid-icons": "^1.1.0",
     "solid-js": "^1.8.22",
     "tailwindcss": "^3.4.10",
     "temporal-polyfill": "^0.2.5",

@@ -5,14 +5,14 @@ import { MatricsEvent } from "~/types";
 import { Show } from "solid-js";
 import { loadEvent } from "~/db";
 import { Temporal } from "temporal-polyfill";
-
-export type MatricsEvent = {
-  name: string;
-  description: string;
-  location: string;
-  start: Temporal.ZonedDateTime;
-  end: Temporal.ZonedDateTime;
-};
+import {
+  FaBrandsApple,
+  FaBrandsGoogle,
+  FaBrandsMicrosoft,
+  FaRegularClock,
+  FaSolidLocationDot,
+} from "solid-icons/fa";
+import { IconTypes } from "solid-icons";
 
 const Event = ({ event }: { event: MatricsEvent }) => {
   const icsFields = {
@@ -22,25 +22,76 @@ const Event = ({ event }: { event: MatricsEvent }) => {
     description: event.description,
     location: event.location,
   };
+
+  const IconLink = ({
+    icon: Icon,
+    label,
+    url,
+  }: {
+    icon: IconTypes;
+    label: string;
+    url: string;
+  }) => {
+    return (
+      <a
+        class="flex items-center space-x-3 underline"
+        href={url}
+        target="_blank"
+      >
+        <Icon />
+        <span>{label}</span>
+      </a>
+    );
+  };
+
+  const mapsURL = (location: string) => {
+    const url = new URL("https://www.google.com/maps/search/?api=1");
+    url.searchParams.set("query", location);
+    return url.toString();
+  };
   return (
-    <>
-      <div>Name: {event.name}</div>
-      <div>Description: {event.description}</div>
-      <div>Location: {event.location}</div>
-      <div>Start: {event.start.toString()}</div>
-      <div>End: {event.end.toString()}</div>
-      <div>
-        <a href={google(icsFields)}>Add to Google Calendar</a>
+    <div class="max-w-xl rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3">
+      <h1 class="text-lg font-semibold">{event.name}</h1>
+      <p class="whitespace-pre-line">{event.description}</p>
+      <IconLink
+        icon={FaSolidLocationDot}
+        url={mapsURL(event.location)}
+        label={event.location}
+      />
+      <div class="flex items-center space-x-3">
+        <FaRegularClock />
+        <span>
+          {event.start.toLocaleString("en", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            hour: "numeric",
+            minute: "numeric",
+          })}
+          {" to "}
+          {event.end.toLocaleString("en", {
+            hour: "numeric",
+            minute: "numeric",
+            timeZoneName: "shortGeneric",
+          })}
+        </span>
       </div>
-      <div>
-        <a href={outlook(icsFields)}>Add to Outlook Calendar</a>
-      </div>
-      <div>
-        <a href={ics(icsFields)} download={`${event.name}.ics`}>
-          Download ICS
-        </a>
-      </div>
-    </>
+      <IconLink
+        icon={FaBrandsGoogle}
+        url={google(icsFields)}
+        label="Add to Google Calendar"
+      />
+      <IconLink
+        icon={FaBrandsMicrosoft}
+        url={outlook(icsFields)}
+        label="Add to Outlook Calendar"
+      />
+      <IconLink
+        icon={FaBrandsApple}
+        url={ics(icsFields)}
+        label="Download ICS"
+      />
+    </div>
   );
 };
 
@@ -59,9 +110,8 @@ const EventPage = () => {
     return loadEvent(params.id);
   });
   return (
-    <main>
+    <main class="flex justify-center">
       <Title>Event information</Title>
-      <h1>Event information</h1>
       <Show when={event()} fallback="Loading event">
         {(event) => <Event event={parseEvent(event())} />}
       </Show>
