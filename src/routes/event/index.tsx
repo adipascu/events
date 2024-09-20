@@ -3,6 +3,7 @@ import { action, redirect } from "@solidjs/router";
 import { Temporal } from "temporal-polyfill";
 import { IS_PRODUCTION } from "~/config";
 import { createEvent } from "~/db";
+import Editor from "~/editor";
 
 const handleSubmit = action<[FormData]>(async (formData) => {
   "use server";
@@ -60,10 +61,7 @@ function EventForm() {
         />
       </div>
       <div class="space-y-2">
-        <label
-          for="start-datetime"
-          class="block text-gray-700 font-medium"
-        >
+        <label for="start-datetime" class="block text-gray-700 font-medium">
           Event Start Date and Time:
         </label>
         <input
@@ -76,10 +74,7 @@ function EventForm() {
         />
       </div>
       <div class="space-y-2">
-        <label
-          for="end-datetime"
-          class="block text-gray-700 font-medium"
-        >
+        <label for="end-datetime" class="block text-gray-700 font-medium">
           Event End Date and Time:
         </label>
         <input
@@ -104,21 +99,12 @@ function EventForm() {
           value={IS_PRODUCTION ? "" : "HSBXL"}
         />
       </div>
+
       <div class="space-y-2">
-        <label
-          for="description"
-          class="block text-gray-700 font-medium"
-        >
+        <label for="description" class="block text-gray-700 font-medium">
           Event Description:
         </label>
-        <textarea
-          id="description"
-          name="description"
-          required
-          class="w-full border-gray-300 rounded-md shadow-sm"
-        >
-          {IS_PRODUCTION ? "" : PLACEHOLDER_DESCRIPTION}
-        </textarea>
+        <Editor>{IS_PRODUCTION ? "" : PLACEHOLDER_DESCRIPTION}</Editor>
       </div>
       <button
         type="submit"

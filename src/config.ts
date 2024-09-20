@@ -1,3 +1,5 @@
+import { isServer } from "solid-js/web";
+
 export const IS_PRODUCTION = import.meta.env.PROD;
 
 export const EVENTBRITE_API_KEY = IS_PRODUCTION
@@ -28,8 +30,15 @@ export const FACEBOOK_CLIENT_SECRET = IS_PRODUCTION
 
 export const COUCHDB_URL = (() => {
   const data = process.env.COUCHDB_URL;
-  if (!data) {
-    throw new Error("Missinng COUCHDB_URL env var");
+  if (isServer) {
+    if (!data) {
+      throw new Error("Missing COUCHDB_URL env var");
+    }
+    return data;
+  } else {
+    if (data) {
+      console.error("Data leak");
+    }
+    return "";
   }
-  return data;
 })();
