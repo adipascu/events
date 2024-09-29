@@ -50,48 +50,53 @@ const Event = ({ event }: { event: MatricsEvent }) => {
     return url.toString();
   };
   return (
-    <div class="max-w-xl rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 sm:my-6">
-      <Title>{event.name}</Title>
-      <h1 class="text-lg font-semibold">{event.name}</h1>
-      <p class="whitespace-pre-line">{event.description}</p>
-      <div class="flex items-center space-x-3">
-        <FaRegularClock />
-        <span>
-          {event.start.toLocaleString("en", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            hour: "numeric",
-            minute: "numeric",
-          })}
-          {" to "}
-          {event.end.toLocaleString("en", {
-            hour: "numeric",
-            minute: "numeric",
-            timeZoneName: "shortGeneric",
-          })}
-        </span>
+    <div>
+      <div class="max-w-xl rounded-lg p-6 bg-white ring-1 ring-slate-900/5 shadow-lg space-y-3 sm:my-6">
+        <Title>{event.name}</Title>
+        <h1 class="text-lg font-semibold">{event.name}</h1>
+        <p class="whitespace-pre-line">{event.description}</p>
+        <div class="flex items-center space-x-3">
+          <FaRegularClock />
+          <span>
+            {event.start.toLocaleString("en", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              hour: "numeric",
+              minute: "numeric",
+            })}
+            {" to "}
+            {event.end.toLocaleString("en", {
+              hour: "numeric",
+              minute: "numeric",
+              timeZoneName: "shortGeneric",
+            })}
+          </span>
+        </div>
+        <IconLink
+          icon={FaSolidLocationDot}
+          url={mapsURL(event.location)}
+          label={event.location}
+        />
+        <IconLink
+          icon={FaBrandsGoogle}
+          url={google(icsFields)}
+          label="Add to Google Calendar"
+        />
+        <IconLink
+          icon={FaBrandsMicrosoft}
+          url={outlook(icsFields)}
+          label="Add to Outlook Calendar"
+        />
+        <IconLink
+          icon={FaBrandsApple}
+          url={ics(icsFields)}
+          label="Download ICS"
+        />
       </div>
-      <IconLink
-        icon={FaSolidLocationDot}
-        url={mapsURL(event.location)}
-        label={event.location}
-      />
-      <IconLink
-        icon={FaBrandsGoogle}
-        url={google(icsFields)}
-        label="Add to Google Calendar"
-      />
-      <IconLink
-        icon={FaBrandsMicrosoft}
-        url={outlook(icsFields)}
-        label="Add to Outlook Calendar"
-      />
-      <IconLink
-        icon={FaBrandsApple}
-        url={ics(icsFields)}
-        label="Download ICS"
-      />
+      <a href="/event" class="p-6 underline">
+        Create your own event
+      </a>
     </div>
   );
 };
