@@ -8,6 +8,8 @@ import Editor from "~/editor";
 const handleSubmit = action<[FormData]>(async (formData) => {
   "use server";
 
+  const phoneNumbers = formData.getAll("phone-numbers") as string[];
+
   const eventID = await createEvent({
     name: formData.get("name") as string,
     start: Temporal.PlainDateTime.from(
@@ -18,8 +20,10 @@ const handleSubmit = action<[FormData]>(async (formData) => {
     ).toZonedDateTime("Europe/Brussels"),
     location: formData.get("location") as string,
     description: formData.get("description") as string,
+    phoneNumbers,
   });
   console.log("Event Created with ID " + eventID);
+  console.log("Phone numbers: ", phoneNumbers);
   throw redirect("/event/" + eventID);
 });
 
@@ -106,6 +110,21 @@ function EventForm() {
         </label>
         <Editor>{IS_PRODUCTION ? "" : PLACEHOLDER_DESCRIPTION}</Editor>
       </div>
+
+      <div class="space-y-2">
+        <label for="phone-numbers" class="block text-gray-700 font-medium">
+          Recipients' Phone Numbers (comma-separated):
+        </label>
+        <input
+          type="text"
+          id="phone-numbers"
+          name="phone-numbers"
+          class="w-full border-gray-300 rounded-md shadow-sm"
+          placeholder="e.g. +1234567890, +9876543210"
+          value={IS_PRODUCTION ? "" : "+40745080000"}
+        />
+      </div>
+
       <button
         type="submit"
         class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"

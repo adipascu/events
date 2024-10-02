@@ -6,4 +6,5 @@ export type MatricsEvent = {
   location: string;
   start: Temporal.ZonedDateTime;
   end: Temporal.ZonedDateTime;
+  phoneNumbers: string[];
 };

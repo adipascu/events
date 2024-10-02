@@ -25,6 +25,7 @@ const createEventsDB = (async () => {
     location: string;
     start: string;
     end: string;
+    phoneNumbers: string[];
   }>("events");
 })();
 
