@@ -1,7 +1,7 @@
 import { Title } from "@solidjs/meta";
 import { createAsync, useParams } from "@solidjs/router";
 import { google, outlook, office365, yahoo, ics } from "calendar-link";
-import { MatricsEvent } from "~/types";
+import { MatricsEventPublic } from "~/types";
 import { Show } from "solid-js";
 import { loadEvent } from "~/db";
 import { Temporal } from "temporal-polyfill";
@@ -14,7 +14,7 @@ import {
 } from "solid-icons/fa";
 import { IconTypes } from "solid-icons";
 
-const Event = ({ event }: { event: MatricsEvent }) => {
+const Event = ({ event }: { event: MatricsEventPublic }) => {
   const icsFields = {
     title: event.name,
     start: event.start.toPlainDateTime().toString(),
@@ -108,7 +108,7 @@ const parseEvent = (doc: any) => {
     location: doc.location,
     start: Temporal.ZonedDateTime.from(doc.start),
     end: Temporal.ZonedDateTime.from(doc.end),
-  } satisfies MatricsEvent;
+  } satisfies MatricsEventPublic;
 };
 const EventPage = () => {
   const params = useParams();

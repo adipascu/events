@@ -3,7 +3,7 @@
 import nano from "nano";
 import { customAlphabet } from "nanoid";
 import { COUCHDB_URL } from "./config";
-import { MatricsEvent } from "./types";
+import { MatricsEventPrivate } from "./types";
 import { Temporal } from "temporal-polyfill";
 
 const nolookalikes = "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz";
@@ -29,7 +29,7 @@ const createEventsDB = (async () => {
   }>("events");
 })();
 
-export const createEvent = async (event: MatricsEvent) => {
+export const createEvent = async (event: MatricsEventPrivate) => {
   const ID = createID();
   const eventsDB = await createEventsDB;
 
@@ -43,5 +43,13 @@ export const createEvent = async (event: MatricsEvent) => {
 
 export const loadEvent = async (ID: string) => {
   const eventsDB = await createEventsDB;
-  return await eventsDB.get(ID);
+
+  const { name, description, location, start, end } = await eventsDB.get(ID);
+  return {
+    name,
+    description,
+    location,
+    start,
+    end,
+  };
 };
