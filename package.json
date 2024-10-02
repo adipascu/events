@@ -20,6 +20,7 @@
     "calendar-link": "^2.7.0",
     "nano": "^10.1.4",
     "nanoid": "^5.0.7",
+    "phone": "^3.1.50",
     "postcss": "^8.4.45",
     "prosemirror-example-setup": "^1.2.3",
     "prosemirror-markdown": "^1.13.0",

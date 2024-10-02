@@ -35,6 +35,9 @@ importers:
       nanoid:
         specifier: ^5.0.7
         version: 5.0.7
+      phone:
+        specifier: ^3.1.50
+        version: 3.1.50
       postcss:
         specifier: ^8.4.45
         version: 8.4.45
@@ -2093,6 +2096,10 @@ packages:
 
   perfect-debounce@1.0.0:
     resolution: {integrity: sha512-xCy9V055GLEqoFaHoC1SoLIaLmWctgCUaBaWxDZ7/Zx4CTyX7cJQLJOok/orfjZAh9kEYpjJa4d0KcJmCbctZA==}
+
+  phone@3.1.50:
+    resolution: {integrity: sha512-TRmb2bX3sX+rrOrc8FRd8hmy4exoH2Lu3vjBP/dLgwwci1lv7DbjJ2iHMe7X4Hm8Pa0rJcfqTbq/O1vjU4NgxQ==}
+    engines: {node: '>=12'}
 
   picocolors@1.1.0:
     resolution: {integrity: sha512-TQ92mBOW0l3LeMeyLV6mzy/kWr8lkd/hp3mTg7wYK7zJhuBStmGMBG0BdeDZS/dZx1IukaX6Bk11zcln25o1Aw==}
@@ -4880,6 +4887,8 @@ snapshots:
   pathe@1.1.2: {}
 
   perfect-debounce@1.0.0: {}
+
+  phone@3.1.50: {}
 
   picocolors@1.1.0: {}
 

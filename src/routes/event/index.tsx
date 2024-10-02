@@ -4,11 +4,22 @@ import { Temporal } from "temporal-polyfill";
 import { IS_PRODUCTION } from "~/config";
 import { createEvent } from "~/db";
 import Editor from "~/editor";
+import { For, Show } from "solid-js";
+import { createStore } from "solid-js/store";
+import { phone } from "phone";
 
-const handleSubmit = action<[FormData]>(async (formData) => {
+const handleSubmit = action(async (formData: FormData) => {
   "use server";
 
-  const phoneNumbers = formData.getAll("phone-numbers") as string[];
+  const phoneNumbersRaw = formData.getAll("phone-numbers[]") as string[];
+  const phoneNumbers = phoneNumbersRaw.map((number) => {
+    const result = phone(number);
+    if (result.isValid) {
+      return result.phoneNumber;
+    } else {
+      throw new Error(`Invalid phone number: ${number}`);
+    }
+  });
 
   const eventID = await createEvent({
     name: formData.get("name") as string,
@@ -23,7 +34,6 @@ const handleSubmit = action<[FormData]>(async (formData) => {
     phoneNumbers,
   });
   console.log("Event Created with ID " + eventID);
-  console.log("Phone numbers: ", phoneNumbers);
   throw redirect("/event/" + eventID);
 });
 
@@ -44,6 +54,27 @@ Knowledge Exchange: Encountered a tech puzzle? Someone in the room might have ju
 `;
 
 function EventForm() {
+  const [phoneNumbers, setPhoneNumbers] = createStore<
+    { number: string; valid: boolean }[]
+  >([]);
+
+  const addPhoneNumber = () => {
+    setPhoneNumbers([...phoneNumbers, { number: "", valid: false }]);
+  };
+
+  const removePhoneNumber = (index: number) => {
+    setPhoneNumbers((phones) => phones.filter((_, i) => i !== index));
+  };
+
+  const updatePhoneNumber = (index: number, value: string) => {
+    const result = phone(value);
+    setPhoneNumbers(index, { number: value, valid: result.isValid });
+  };
+
+  const isFormValid = () => {
+    return phoneNumbers.every((phoneNumber) => phoneNumber.valid);
+  };
+
   return (
     <form
       action={handleSubmit}
@@ -51,6 +82,11 @@ function EventForm() {
       class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg space-y-4"
     >
       <h1 class="text-2xl font-bold mb-6">Create an Event</h1>
+
+      <Show when={handleSubmit.error}>
+        <div class="text-red-500">{handleSubmit.error.message}</div>
+      </Show>
+
       <div class="space-y-2">
         <label for="name" class="block text-gray-700 font-medium">
           Event Name:
@@ -60,7 +96,7 @@ function EventForm() {
           id="name"
           name="name"
           required
-          class="w-full border-gray-300 rounded-md shadow-sm"
+          class="w-full border border-gray-300 rounded-md shadow-sm"
           value={IS_PRODUCTION ? "" : "TechTuesday"}
         />
       </div>
@@ -73,7 +109,7 @@ function EventForm() {
           id="start-datetime"
           name="start-datetime"
           required
-          class="w-full border-gray-300 rounded-md shadow-sm"
+          class="w-full border border-gray-300 rounded-md shadow-sm"
           value={IS_PRODUCTION ? "" : "2024-09-10T19:00"}
         />
       </div>
@@ -86,7 +122,7 @@ function EventForm() {
           id="end-datetime"
           name="end-datetime"
           required
-          class="w-full border-gray-300 rounded-md shadow-sm"
+          class="w-full border border-gray-300 rounded-md shadow-sm"
           value={IS_PRODUCTION ? "" : "2024-09-10T22:00"}
         />
       </div>
@@ -99,7 +135,7 @@ function EventForm() {
           id="location"
           name="location"
           required
-          class="w-full border-gray-300 rounded-md shadow-sm"
+          class="w-full border border-gray-300 rounded-md shadow-sm"
           value={IS_PRODUCTION ? "" : "HSBXL"}
         />
       </div>
@@ -112,22 +148,52 @@ function EventForm() {
       </div>
 
       <div class="space-y-2">
-        <label for="phone-numbers" class="block text-gray-700 font-medium">
-          Recipients' Phone Numbers (comma-separated):
+        <label class="block text-gray-700 font-medium">
+          Recipients' Phone Numbers:
         </label>
-        <input
-          type="text"
-          id="phone-numbers"
-          name="phone-numbers"
-          class="w-full border-gray-300 rounded-md shadow-sm"
-          placeholder="e.g. +1234567890, +9876543210"
-          value={IS_PRODUCTION ? "" : "+40745080000"}
-        />
+        <For each={phoneNumbers}>
+          {(phoneNumber, index) => (
+            <div class="flex items-center space-x-2">
+              <input
+                type="tel"
+                name="phone-numbers[]"
+                value={phoneNumber.number}
+                onInput={(e) =>
+                  updatePhoneNumber(index(), e.currentTarget.value)
+                }
+                class={`w-full border-2 rounded-md shadow-sm ${
+                  phoneNumber.valid ? "border-green-500" : "border-red-500"
+                }`}
+                inputMode="tel"
+                autocomplete="tel"
+              />
+              <button
+                type="button"
+                onClick={() => removePhoneNumber(index())}
+                class="text-red-500"
+              >
+                Remove
+              </button>
+            </div>
+          )}
+        </For>
+        <button
+          type="button"
+          onClick={addPhoneNumber}
+          class="mt-2 bg-green-500 text-white py-1 px-2 rounded-md"
+        >
+          Add Phone Number
+        </button>
       </div>
 
       <button
         type="submit"
-        class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+        disabled={!isFormValid()}
+        class={`w-full py-2 px-4 rounded-md ${
+          isFormValid()
+            ? "bg-blue-500 text-white hover:bg-blue-600"
+            : "bg-gray-400 text-gray-700 cursor-not-allowed"
+        }`}
       >
         Create Event
       </button>
